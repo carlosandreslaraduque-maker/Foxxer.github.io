@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>FOXER | Desarrolla tu astucia, domina el Saber 11</title>
+  <!-- Google Fonts: Nunito & Fredoka -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=4" />
+</head>
+<body>
+
+  <!-- ================= PANTALLA DE REGISTRO E INICIO DE SESIÓN (ESTILO DUOLINGO) ================= -->
+  <div id="auth-screen" class="auth-screen hidden">
+    <div class="auth-container">
+      <!-- Columna Izquierda: Presentación de la Mascota FOXER -->
+      <div class="auth-hero-side">
+        <div class="auth-mascot-stage">
+          <img src="logo-zorro.png" alt="Zorro FOXER" class="foxer-img-auth" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <div class="foxer-svg-fallback" style="display:none;" data-fox-pose="cool"></div>
+        </div>
+        <h1 class="auth-brand-title">FOXER</h1>
+        <p class="auth-slogan">“Desarrolla tu astucia, domina el Saber 11”</p>
+        <div class="auth-features-pills">
+          <span class="auth-pill">🗄️ +125 Preguntas Reales ICFES</span>
+          <span class="auth-pill">🏆 Ligas y Racha Guardada</span>
+          <span class="auth-pill">🌎 5 Mundos Interactivos</span>
+        </div>
+
+        <!-- Cuentas guardadas en este navegador para reingreso rápido -->
+        <div id="saved-accounts-box" class="saved-accounts-box hidden">
+          <h3>👋 ¡Bienvenido de vuelta! Elige tu cuenta:</h3>
+          <div id="saved-accounts-list" class="saved-accounts-list"></div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Tarjeta 3D de Login / Registro -->
+      <div class="auth-card-side">
+        <div class="auth-tabs">
+          <button id="tab-btn-login" class="auth-tab active" type="button">INICIAR SESIÓN</button>
+          <button id="tab-btn-register" class="auth-tab" type="button">CREAR CUENTA</button>
+        </div>
+
+        <!-- Formulario de Inicio de Sesión -->
+        <form id="form-login" class="auth-form">
+          <h2>¡Qué alegría verte de nuevo!</h2>
+          <p class="auth-form-sub">Ingresa con tu usuario o correo para continuar tu racha rumbo al Saber 11.</p>
+
+          <div class="input-group">
+            <label for="login-identifier">Usuario o Correo Electrónico</label>
+            <input type="text" id="login-identifier" class="input-duo" placeholder="Ej: carlos@colegio.edu.co o carlos11" required />
+          </div>
+
+          <div class="input-group">
+            <label for="login-password">Contraseña</label>
+            <input type="password" id="login-password" class="input-duo" placeholder="••••••••" required />
+          </div>
+
+          <div id="login-error-msg" class="auth-error-msg hidden"></div>
+
+          <button type="submit" class="btn-3d btn-orange btn-large auth-submit-btn">
+            🚀 ENTRAR A MI CUENTA
+          </button>
+
+          <div class="auth-divider"><span>O TAMBIÉN PUEDES</span></div>
+
+          <button type="button" id="btn-guest-access" class="btn-3d btn-outline-gray auth-submit-btn">
+            🦊 ENTRAR EN MODO DEMO RÁPIDO
+          </button>
+        </form>
+
+        <!-- Formulario de Registro de Nueva Cuenta -->
+        <form id="form-register" class="auth-form hidden">
+          <h2>Crea tu perfil de aspirante</h2>
+          <p class="auth-form-sub">Tu progreso, medallas, racha y nivel de astucia quedarán guardados para siempre.</p>
+
+          <div class="input-group">
+            <label for="reg-fullname">Nombre o Apodo</label>
+            <input type="text" id="reg-fullname" class="input-duo" placeholder="Ej: Carlos Rodríguez" required />
+          </div>
+
+          <div class="input-row-2">
+            <div class="input-group">
+              <label for="reg-username">Usuario o Correo</label>
+              <input type="text" id="reg-username" class="input-duo" placeholder="Ej: carlos_icfes" required />
+            </div>
+            <div class="input-group">
+              <label for="reg-password">Contraseña</label>
+              <input type="password" id="reg-password" class="input-duo" placeholder="Mínimo 4 caracteres" required />
+            </div>
+          </div>
+
+          <div class="input-row-2">
+            <div class="input-group">
+              <label for="reg-school">Colegio / Ciudad (Opcional)</label>
+              <input type="text" id="reg-school" class="input-duo" placeholder="Ej: I.E. Nacional" />
+            </div>
+            <div class="input-group">
+              <label for="reg-goal">Meta Puntaje Saber 11</label>
+              <select id="reg-goal" class="input-duo">
+                <option value="350+">🎯 Meta: 350+ Puntos</option>
+                <option value="400+" selected>🔥 Meta: 400+ (Beca)</option>
+                <option value="450+">👑 Meta: 450+ (Excelencia)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="register-error-msg" class="auth-error-msg hidden"></div>
+
+          <button type="submit" class="btn-3d btn-green btn-large auth-submit-btn">
+            ✨ CREAR CUENTA Y EMPEZAR
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= APLICACIÓN PRINCIPAL (3 COLUMNAS DUOLINGO) ================= -->
+  <div id="app-layout" class="app-layout">
+
+    <!-- 1. BARRA LATERAL IZQUIERDA FIJA -->
+    <aside class="sidebar-left">
+      <div class="brand-header" id="brand-home-btn" title="Ir al inicio">
+        <div class="brand-logo-wrap">
+          <img src="logo-zorro.png" alt="Zorro FOXER" class="foxer-img-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <div class="foxer-svg-fallback" style="display:none;" data-fox-pose="normal"></div>
+        </div>
+        <div class="brand-titles">
+          <span class="brand-name">FOXER</span>
+          <span class="brand-slogan">Domina el Saber 11</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="learn">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-text">APRENDER</span>
+        </button>
+        <button class="nav-item" data-view="duels">
+          <span class="nav-icon">⚡</span>
+          <span class="nav-text">DUELOS</span>
+        </button>
+        <button class="nav-item" data-view="leagues">
+          <span class="nav-icon">🏆</span>
+          <span class="nav-text">LIGAS</span>
+        </button>
+        <button class="nav-item" data-view="quests">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-text">MISIONES</span>
+        </button>
+        <button class="nav-item" data-view="database">
+          <span class="nav-icon">🗄️</span>
+          <span class="nav-text">BANCO ICFES</span>
+        </button>
+        <button class="nav-item" data-view="profile">
+          <span class="nav-icon">🦊</span>
+          <span class="nav-text">PERFIL Y LOGROS</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <!-- Tarjeta de sesión activa del usuario -->
+        <div class="user-session-chip" id="sidebar-user-chip">
+          <div class="session-chip-info">
+            <span class="session-chip-name" id="sidebar-username-lbl">Estudiante</span>
+            <span class="session-chip-goal" id="sidebar-goal-lbl">Meta: 400+</span>
+          </div>
+          <button id="btn-logout-sidebar" class="btn-logout-mini" title="Cerrar sesión o cambiar de cuenta">
+            🚪 Salir
+          </button>
+        </div>
+
+        <button id="btn-sound-toggle" class="btn-3d btn-outline-gray btn-sound">
+          🔊 SONIDO: ACTIVADO
+        </button>
+      </div>
+    </aside>
+
+    <!-- 2. COLUMNA CENTRAL (EL CAMINO Y VISTAS SECUNDARIAS) -->
+    <main class="main-column">
+
+      <!-- VISTA: APRENDER (MAPA DE CAMINOS EN ZIG-ZAG) -->
+      <section id="view-learn" class="view-section active">
+        <!-- Selector superior de las 5 áreas del ICFES -->
+        <div class="subject-tabs-bar" id="subject-tabs">
+          <button class="subject-tab active" data-subject="lectura">
+            <span class="tab-emoji">📖</span>
+            <span class="tab-label">Lectura Crítica</span>
+          </button>
+          <button class="subject-tab" data-subject="matematicas">
+            <span class="tab-emoji">📐</span>
+            <span class="tab-label">Matemáticas</span>
+          </button>
+          <button class="subject-tab" data-subject="ciencias">
+            <span class="tab-emoji">🧪</span>
+            <span class="tab-label">Ciencias Naturales</span>
+          </button>
+          <button class="subject-tab" data-subject="sociales">
+            <span class="tab-emoji">🌎</span>
+            <span class="tab-label">Sociales y Ciudadanas</span>
+          </button>
+          <button class="subject-tab" data-subject="ingles">
+            <span class="tab-emoji">🇬🇧</span>
+            <span class="tab-label">Inglés</span>
+          </button>
+        </div>
+
+        <!-- Banner superior de la Unidad actual -->
+        <div id="unit-banner" class="unit-banner">
+          <div class="unit-banner-info">
+            <span class="unit-badge" id="unit-badge-title">UNIDAD 1 • SABER 11</span>
+            <h1 class="unit-title" id="unit-main-title">Lectura Crítica: Comprensión e Inferencia</h1>
+            <p class="unit-competency" id="unit-competency-desc">Competencia: Identificar contenidos locales, estructura textual y lectura crítica intertextual.</p>
+          </div>
+          <button id="btn-open-guide" class="btn-3d btn-guide">
+            <span>📘</span> GUÍA
+          </button>
+        </div>
+
+        <!-- Camino de Nodos en Zig-Zag estilo Duolingo -->
+        <div class="path-wrapper" id="path-container">
+          <!-- Renderizado dinámicamente por script.js -->
+        </div>
+      </section>
+
+      <!-- VISTA: DUELOS (CONTRARRELOJ) -->
+      <section id="view-duels" class="view-section">
+        <div class="feature-hero duel-hero">
+          <div class="hero-mascot">
+            <img src="logo-zorro.png" alt="Zorro FOXER" class="foxer-img-hero" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <div class="foxer-svg-fallback" style="display:none;" data-fox-pose="cool"></div>
+          </div>
+          <div class="hero-content">
+            <span class="badge-pill">⚡ MODO CONTRARRELOJ ICFES</span>
+            <h2>Duelo de Astucia Relámpago</h2>
+            <p>Tienes <strong>90 segundos</strong> para responder preguntas seleccionadas al azar de la Base de Datos de <strong>+125 preguntas reales</strong>. ¡Cada acierto suma +15 XP!</p>
+            <div class="duel-stats-row">
+              <div class="duel-stat-box">
+                <span class="duel-stat-val" id="duel-best-score">0</span>
+                <span class="duel-stat-lbl">Récord de aciertos</span>
+              </div>
+              <div class="duel-stat-box">
+                <span class="duel-stat-val">⏱️ 90s</span>
+                <span class="duel-stat-lbl">Tiempo límite</span>
+              </div>
+              <div class="duel-stat-box">
+                <span class="duel-stat-val" id="duel-total-db-count">125</span>
+                <span class="duel-stat-lbl">Preguntas en BD</span>
+              </div>
+            </div>
+            <button id="btn-start-duel" class="btn-3d btn-orange btn-large">
+              ⚡ ¡INICIAR DUELO CONTRARRELOJ!
+            </button>
+          </div>
+        </div>
+
+        <div class="duel-subject-cards">
+          <h3 class="section-subtitle">O haz un maratón aleatorio de 10 preguntas por área:</h3>
+          <div class="duel-grid" id="duel-subject-grid">
+            <!-- Generado en JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- VISTA: LIGAS (DIVISIÓN ZORRO DORADO) -->
+      <section id="view-leagues" class="view-section">
+        <div class="league-page-header">
+          <div class="league-trophy-icon">🏆</div>
+          <h2>División Zorro Dorado</h2>
+          <p>Aquí compiten todas las cuentas registradas en FOXER junto a los guardianes del Saber 11. ¡Gana XP para llegar al #1!</p>
+          <div class="league-zone-indicator">
+            <span>🔥 Zona de Ascenso a División Zorro Legendario (Top 3)</span>
+          </div>
+        </div>
+        <div class="league-full-list" id="league-full-container">
+          <!-- Renderizado en JS -->
+        </div>
+      </section>
+
+      <!-- VISTA: MISIONES DIARIAS -->
+      <section id="view-quests" class="view-section">
+        <div class="quests-page-header">
+          <div class="quests-header-text">
+            <span class="badge-pill">🎯 RETOS DEL DÍA</span>
+            <h2>Misiones de Entrenamiento ICFES</h2>
+            <p>Completa las misiones diarias para abrir cofres de gemas y subir tu Nivel de Astucia.</p>
+          </div>
+          <div class="quests-header-mascot">
+            <img src="logo-zorro.png" alt="Zorro FOXER" class="foxer-img-mid" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <div class="foxer-svg-fallback" style="display:none;" data-fox-pose="happy"></div>
+          </div>
+        </div>
+        <div class="quests-full-list" id="quests-full-container">
+          <!-- Renderizado en JS -->
+        </div>
+      </section>
+
+      <!-- VISTA: BASE DE DATOS DE PREGUNTAS (125 A 200+ PREGUNTAS) -->
+      <section id="view-database" class="view-section">
+        <div class="db-header-card">
+          <div>
+            <span class="badge-pill">🗄️ MOTOR DE BASE DE DATOS LOCAL + INDEXEDDB</span>
+            <h2>Banco Oficial de Preguntas Saber 11</h2>
+            <p>Explora las <strong id="db-total-counter">125</strong> preguntas precargadas en las 5 áreas del ICFES o agrega nuevas preguntas personalizadas a la base de datos.</p>
+          </div>
+          <button id="btn-open-add-question" class="btn-3d btn-green">
+            ➕ AGREGAR PREGUNTA
+          </button>
+        </div>
+
+        <!-- Resumen de conteo por cada área -->
+        <div class="db-stats-strip" id="db-stats-strip">
+          <!-- Renderizado en JS -->
+        </div>
+
+        <!-- Filtros de búsqueda de la base de datos -->
+        <div class="db-filter-bar">
+          <select id="db-filter-subject" class="input-duo">
+            <option value="all">🌎 Todas las áreas (5 mundos)</option>
+            <option value="lectura">📖 Lectura Crítica</option>
+            <option value="matematicas">📐 Matemáticas</option>
+            <option value="ciencias">🧪 Ciencias Naturales</option>
+            <option value="sociales">🌎 Sociales y Ciudadanas</option>
+            <option value="ingles">🇬🇧 Inglés</option>
+          </select>
+          <input type="text" id="db-search-input" class="input-duo" placeholder="🔍 Buscar por competencia, palabra clave o ID..." />
+        </div>
+
+        <!-- Lista de preguntas de la base de datos -->
+        <div id="db-questions-list" class="db-questions-list">
+          <!-- Renderizado en JS -->
+        </div>
+      </section>
+
+      <!-- VISTA: PERFIL Y LOGROS -->
+      <section id="view-profile" class="view-section">
+        <div class="profile-card-main">
+          <div class="profile-avatar-wrap">
+            <img src="logo-zorro.png" alt="Zorro FOXER" class="foxer-img-profile" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <div class="foxer-svg-fallback" style="display:none;" data-fox-pose="cool"></div>
+          </div>
+          <div class="profile-info">
+            <div class="profile-name-row">
+              <h2 id="profile-username">Aspirante Saber 11</h2>
+              <button id="btn-edit-name" class="btn-3d btn-outline-gray btn-sm">✏️ Editar</button>
+              <button id="btn-switch-account" class="btn-3d btn-orange btn-sm">👥 Cambiar Cuenta / Salir</button>
+            </div>
+            <p class="profile-slogan" id="profile-user-details">Usuario registrado • Meta ICFES: 400+</p>
+            <div class="cunning-badge-bar">
+              <span class="cunning-tag" id="profile-cunning-rank">🦊 Nivel de Astucia: Zorro Aprendiz (Nv. 1)</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="section-subtitle">Estadísticas de Preparación</h3>
+        <div class="profile-stats-grid">
+          <div class="stat-card-3d">
+            <span class="stat-icon">🔥</span>
+            <div>
+              <div class="stat-value" id="prof-stat-streak">1</div>
+              <div class="stat-label">Días de Racha</div>
+            </div>
+          </div>
+          <div class="stat-card-3d">
+            <span class="stat-icon">⚡</span>
+            <div>
+              <div class="stat-value" id="prof-stat-xp">0</div>
+              <div class="stat-label">XP Total de Astucia</div>
+            </div>
+          </div>
+          <div class="stat-card-3d">
+            <span class="stat-icon">💎</span>
+            <div>
+              <div class="stat-value" id="prof-stat-gems">100</div>
+              <div class="stat-label">Gemas FOXER</div>
+            </div>
+          </div>
+          <div class="stat-card-3d">
+            <span class="stat-icon">🎖️</span>
+            <div>
+              <div class="stat-value" id="prof-stat-nodes">0 / 25</div>
+              <div class="stat-label">Nodos Superados</div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="section-subtitle">Medallas y Logros Desbloqueables</h3>
+        <div class="achievements-grid" id="achievements-container">
+          <!-- Renderizado en JS -->
+        </div>
+
+        <div class="profile-actions-footer">
+          <button id="btn-export-account" class="btn-3d btn-outline-gray">
+            💾 Descargar copia de seguridad (.json)
+          </button>
+          <button id="btn-reset-progress" class="btn-3d btn-red-outline">
+            🗑️ Reiniciar progreso de esta cuenta
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 3. COLUMNA DERECHA (HUD Y WIDGETS DE GAMIFICACIÓN) -->
+    <aside class="sidebar-right">
+      <!-- Barra superior de estadísticas HUD -->
+      <div class="top-stats-hud">
+        <div class="hud-pill" id="hud-subject-indicator" title="Área actual del ICFES">
+          <span class="hud-icon" id="hud-subject-emoji">📖</span>
+          <span class="hud-val" id="hud-subject-short">LEC</span>
+        </div>
+        <div class="hud-pill hud-streak" title="Racha de días estudiando">
+          <span class="hud-icon">🔥</span>
+          <span class="hud-val" id="hud-streak-val">3</span>
+        </div>
+        <div class="hud-pill hud-gems" title="Gemas FOXER">
+          <span class="hud-icon">💎</span>
+          <span class="hud-val" id="hud-gems-val">120</span>
+        </div>
+        <div class="hud-pill hud-xp" title="Puntos XP de Astucia">
+          <span class="hud-icon">⚡</span>
+          <span class="hud-val" id="hud-xp-val">0 XP</span>
+        </div>
+        <button class="hud-pill hud-hearts" id="btn-hearts-modal" title="Vidas disponibles (Clic para recargar)">
+          <span class="hud-icon">❤️</span>
+          <span class="hud-val" id="hud-hearts-val">5</span>
+        </button>
+      </div>
+
+      <!-- Widget Nivel de Astucia -->
+      <div class="widget-card cunning-widget">
+        <div class="widget-header">
+          <h3>🦊 Nivel de Astucia</h3>
+          <span class="cunning-lvl-pill" id="widget-cunning-lvl">Nv. 1</span>
+        </div>
+        <p class="cunning-title-text" id="widget-cunning-title">Zorro Explorador</p>
+        <div class="progress-track">
+          <div class="progress-fill orange-fill" id="widget-cunning-bar" style="width: 20%;"></div>
+        </div>
+        <div class="cunning-subtext" id="widget-cunning-next">Faltan 100 XP para el siguiente rango</div>
+      </div>
+
+      <!-- Widget División Zorro Dorado (Liga) -->
+      <div class="widget-card league-widget">
+        <div class="widget-header">
+          <h3>🏆 División Zorro Dorado</h3>
+          <button class="link-btn" data-goto="leagues">Ver todo</button>
+        </div>
+        <div class="mini-leaderboard" id="widget-leaderboard">
+          <!-- Renderizado en JS -->
+        </div>
+      </div>
+
+      <!-- Widget Misiones del Día -->
+      <div class="widget-card quests-widget">
+        <div class="widget-header">
+          <h3>🎯 Misiones del Día</h3>
+          <button class="link-btn" data-goto="quests">Ver todas</button>
+        </div>
+        <div class="mini-quests-list" id="widget-quests">
+          <!-- Renderizado en JS -->
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ================= 4. PANTALLA DE JUEGO / SIMULACRO A PANTALLA COMPLETA ================= -->
+  <div id="lesson-screen" class="lesson-screen hidden">
+    <!-- Cabecera del juego -->
+    <header class="lesson-header">
+      <button id="btn-quit-lesson" class="btn-quit-x" title="Salir de la lección">✕</button>
+
+      <div class="lesson-progress-wrapper">
+        <div class="lesson-progress-track">
+          <div id="lesson-progress-bar" class="lesson-progress-fill" style="width: 0%;">
+            <div class="progress-shine"></div>
+          </div>
+        </div>
+        <div id="combo-badge" class="combo-badge hidden">🔥 ¡3 SEGUIDAS!</div>
+      </div>
+
+      <div id="lesson-timer-pill" class="lesson-timer-pill hidden">
+        ⏱️ <span id="lesson-timer-val">90</span>s
+      </div>
+
+      <div class="lesson-hearts-display">
+        <span class="heart-icon-big">❤️</span>
+        <span id="lesson-hearts-count">5</span>
+      </div>
+    </header>
+
+    <!-- Cuerpo de la pregunta -->
+    <main class="lesson-body" id="lesson-question-stage">
+      <div class="question-container">
+        <div class="question-meta-row">
+          <span class="question-area-tag" id="q-area-tag">📖 LECTURA CRÍTICA</span>
+          <span class="question-comp-tag" id="q-comp-tag">Competencia Interpretativa</span>
+          <span class="question-id-tag" id="q-id-tag">#LEC-01</span>
+        </div>
+
+        <h2 class="question-instruction" id="q-instruction">Lee atentamente y selecciona la respuesta más astuta:</h2>
+
+        <!-- Personaje FOXER + Globo de texto con el enunciado tipo ICFES -->
+        <div class="character-prompt-row">
+          <div class="character-avatar-box" id="lesson-fox-avatar">
+            <img src="logo-zorro.png" alt="Zorro FOXER" class="foxer-img-lesson" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <div class="foxer-svg-fallback" style="display:none;" data-fox-pose="thinking"></div>
+          </div>
+          <div class="speech-bubble-icfes">
+            <div id="q-context-box" class="q-context-box"></div>
+            <p id="q-stem-text" class="q-stem-text"></p>
+          </div>
+        </div>
+
+        <!-- Cuadrícula / Lista de 4 botones de opción (A, B, C, D con 1, 2, 3, 4) -->
+        <div class="options-grid" id="options-container">
+          <!-- Renderizado en JS -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Pantalla de Victoria al terminar el nodo (Oculta durante las preguntas) -->
+    <main class="lesson-victory hidden" id="lesson-victory-stage">
+      <div class="victory-content">
+        <div class="victory-mascot-wrap">
+          <img src="logo-zorro.png" alt="Zorro FOXER Celebrando" class="foxer-img-victory" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <div class="foxer-svg-fallback" style="display:none;" data-fox-pose="victory"></div>
+        </div>
+        <h1 class="victory-title" id="victory-heading">¡Lección completada con astucia!</h1>
+        <p class="victory-subtitle" id="victory-subheading">Estás un paso más cerca de dominar el examen Saber 11.</p>
+
+        <div class="victory-cards-row">
+          <div class="v-stat-card v-card-orange">
+            <div class="v-card-header">XP DE ASTUCIA</div>
+            <div class="v-card-body">⚡ <span id="victory-xp">+50</span></div>
+          </div>
+          <div class="v-stat-card v-card-green">
+            <div class="v-card-header">PRECISIÓN</div>
+            <div class="v-card-body">🎯 <span id="victory-accuracy">100%</span></div>
+          </div>
+          <div class="v-stat-card v-card-blue">
+            <div class="v-card-header">GEMAS GANADAS</div>
+            <div class="v-card-body">💎 <span id="victory-gems">+15</span></div>
+          </div>
+        </div>
+
+        <button id="btn-victory-continue" class="btn-3d btn-green btn-large">
+          CONTINUAR AL MAPA
+        </button>
+      </div>
+    </main>
+
+    <!-- Barra inferior fija de Comprobación y Retroalimentación Explicativa -->
+    <footer id="lesson-footer" class="lesson-footer">
+      <div class="footer-inner">
+        <!-- Estado normal: Saltar / Comprobar -->
+        <div id="footer-normal-controls" class="footer-controls-row">
+          <button id="btn-skip-question" class="btn-3d btn-outline-gray">
+            SALTAR
+          </button>
+          <div class="keyboard-hint">💡 Usa las teclas <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> y <kbd>Enter</kbd></div>
+          <button id="btn-check-answer" class="btn-3d btn-disabled" disabled>
+            COMPROBAR
+          </button>
+        </div>
+
+        <!-- Estado de Retroalimentación (Verde o Rojo estilo Duolingo) -->
+        <div id="footer-feedback-panel" class="footer-feedback-panel hidden">
+          <div class="feedback-left">
+            <div class="feedback-icon-circle" id="feedback-icon">✓</div>
+            <div class="feedback-texts">
+              <h3 id="feedback-title">¡Excelente astucia!</h3>
+              <p id="feedback-explanation"></p>
+            </div>
+          </div>
+          <button id="btn-continue-question" class="btn-3d btn-green">
+            CONTINUAR
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ================= MODALES (GUÍA DE UNIDAD, VIDAS Y AGREGAR PREGUNTA) ================= -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-title">📘 Guía de Estrategia ICFES</h2>
+        <button id="btn-close-modal" class="btn-quit-x">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body-content">
+        <!-- Contenido dinámico -->
+      </div>
+      <div class="modal-footer" id="modal-footer-actions">
+        <button id="btn-modal-ok" class="btn-3d btn-orange">¡ENTENDIDO!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast flotante para notificaciones rápidas -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Base de datos de 125 preguntas reales Saber 11 + Lógica principal -->
+  <script src="questions-db.js?v=4"></script>
+  <script src="script.js?v=4"></script>
+</body>
+</html>
